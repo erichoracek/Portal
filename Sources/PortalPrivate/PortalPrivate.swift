@@ -556,8 +556,6 @@ struct PortalPrivateTransitionModifier: ViewModifier {
 
                 // Initialize portal info
                 portalModel.info[idx].initialized = true
-                portalModel.info[idx].animation = animation
-                portalModel.info[idx].completionCriteria = completionCriteria
                 portalModel.info[idx].completion = completion
 
                 // Set the layer view to use the PortalView of the stored container
@@ -645,8 +643,6 @@ struct PortalPrivateItemTransitionModifier<Item: Identifiable>: ViewModifier {
 
                     // Initialize portal info
                     portalModel.info[idx].initialized = true
-                    portalModel.info[idx].animation = animation
-                    portalModel.info[idx].completionCriteria = completionCriteria
                     portalModel.info[idx].completion = completion
 
                     // Set the layer view to use the PortalView of the stored container
@@ -736,8 +732,6 @@ struct MultiIDPortalPrivateTransitionModifier: ViewModifier {
                         }
 
                         portalModel.info[idx].initialized = true
-                        portalModel.info[idx].animation = animation
-                        portalModel.info[idx].completionCriteria = completionCriteria
                         portalModel.info[idx].groupID = groupID
                         portalModel.info[idx].isGroupCoordinator = (i == 0)
 
@@ -858,8 +852,6 @@ struct MultiItemPortalPrivateTransitionModifier<Item: Identifiable>: ViewModifie
         for (i, idx) in indices.enumerated() {
             let portalID = portalModel.info[idx].infoID
             portalModel.info[idx].initialized = true
-            portalModel.info[idx].animation = animation
-            portalModel.info[idx].completionCriteria = completionCriteria
             portalModel.info[idx].groupID = groupID
             portalModel.info[idx].isGroupCoordinator = (i == 0)
 

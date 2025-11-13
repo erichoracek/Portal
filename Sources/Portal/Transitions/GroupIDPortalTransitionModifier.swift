@@ -110,8 +110,6 @@ public struct GroupIDPortalTransitionModifier<LayerView: View>: ViewModifier {
             for (i, idx) in groupIndices.enumerated() {
                 let portalID = portalModel.info[idx].infoID
                 portalModel.info[idx].initialized = true
-                portalModel.info[idx].animation = animation
-                portalModel.info[idx].completionCriteria = completionCriteria
                 portalModel.info[idx].corners = corners
                 portalModel.info[idx].groupID = groupID
                 portalModel.info[idx].isGroupCoordinator = (i == 0)

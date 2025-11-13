@@ -177,8 +177,6 @@ public struct GroupItemPortalTransitionModifier<Item: Identifiable, LayerView: V
     private func configureGroupPortals(at indices: [Int]) {
         for (i, idx) in indices.enumerated() {
             portalModel.info[idx].initialized = true
-            portalModel.info[idx].animation = animation
-            portalModel.info[idx].completionCriteria = completionCriteria
             portalModel.info[idx].corners = corners
             portalModel.info[idx].groupID = groupID
             portalModel.info[idx].isGroupCoordinator = (i == 0)

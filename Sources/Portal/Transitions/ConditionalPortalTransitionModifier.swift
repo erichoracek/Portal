@@ -218,8 +218,6 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
 
         // Configure portal info for any transition
         portalModel.info[idx].initialized = true
-        portalModel.info[idx].animation = animation
-        portalModel.info[idx].completionCriteria = completionCriteria
         portalModel.info[idx].corners = corners
         portalModel.info[idx].completion = completion
         portalModel.info[idx].layerView = AnyView(layerView())
