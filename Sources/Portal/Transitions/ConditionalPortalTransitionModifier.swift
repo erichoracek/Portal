@@ -214,6 +214,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
     ///   - newValue: New value of the isActive state
     private func onChange(oldValue: Bool, newValue: Bool) {
         guard let idx = portalModel.info.firstIndex(where: { $0.infoID == id }) else { return }
+        guard let animation = animation(newValue) else { return }
 
         @Bindable var portalModel = portalModel
 
@@ -226,7 +227,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
         if newValue {
             // Forward transition: isActive became true
             DispatchQueue.main.asyncAfter(deadline: .now() + PortalConstants.animationDelay) {
-                withAnimation(animation(newValue), completionCriteria: completionCriteria) {
+                withAnimation(animation, completionCriteria: completionCriteria) {
                     portalModel.info[idx].animateView = true
                 } completion: {
                     Task { @MainActor in
@@ -240,7 +241,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
             // Reverse transition: isActive became false
             portalModel.info[idx].hideView = false
 
-            withAnimation(animation(newValue), completionCriteria: completionCriteria) {
+            withAnimation(animation, completionCriteria: completionCriteria) {
                 portalModel.info[idx].animateView = false
             } completion: {
                 Task { @MainActor in
