@@ -214,9 +214,20 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
     ///   - newValue: New value of the isActive state
     private func onChange(oldValue: Bool, newValue: Bool) {
         guard let idx = portalModel.info.firstIndex(where: { $0.infoID == id }) else { return }
-        guard let animation = animation(newValue) else { return }
 
         @Bindable var portalModel = portalModel
+
+        guard let animation = animation(newValue) else {
+          portalModel.info[idx].hideView = newValue
+          if !newValue {
+            portalModel.info[idx].initialized = false
+            portalModel.info[idx].layerView = nil
+            portalModel.info[idx].sourceAnchor = nil
+            portalModel.info[idx].destinationAnchor = nil
+          }
+          portalModel.info[idx].completion(newValue)
+          return
+        }
 
         // Configure portal info for any transition
         portalModel.info[idx].initialized = true
