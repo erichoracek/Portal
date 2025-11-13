@@ -352,4 +352,34 @@ public extension View {
                 completion: completion,
                 layerView: layerView))
     }
+
+    /// Applies a portal transition with direct parameter configuration.
+    ///
+    /// - Parameters:
+    ///   - id: Unique identifier for the portal transition
+    ///   - isActive: Boolean binding that controls the transition state
+    ///   - animation: Animation to use for the transition
+    ///   - completionCriteria: How to detect animation completion (defaults to .removed)
+    ///   - layerView: Closure that returns the view to animate during transition
+    ///   - completion: Optional completion handler (defaults to no-op)
+    /// - Returns: A view with the portal transition modifier applied
+    func portalTransition(
+        id: String,
+        isActive: Binding<Bool>,
+        in corners: PortalCorners? = nil,
+        animation: @escaping (Bool) -> Animation?,
+        completionCriteria: AnimationCompletionCriteria = .removed,
+        completion: @escaping (Bool) -> Void = { _ in },
+        @ViewBuilder layerView: @escaping () -> some View,
+    ) -> some View {
+        return modifier(
+            ConditionalPortalTransitionModifier(
+                id: id,
+                isActive: isActive,
+                in: corners,
+                animation: animation,
+                completionCriteria: completionCriteria,
+                completion: completion,
+                layerView: layerView))
+    }
 }
