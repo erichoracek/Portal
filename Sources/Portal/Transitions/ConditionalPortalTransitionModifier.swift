@@ -219,6 +219,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
 
         guard let animation = animation(newValue) else {
           portalModel.info[idx].hideView = newValue
+          portalModel.info[idx].animateView = newValue
           if !newValue {
             portalModel.info[idx].initialized = false
             portalModel.info[idx].layerView = nil
