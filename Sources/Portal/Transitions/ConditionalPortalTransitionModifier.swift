@@ -60,7 +60,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
     public let id: String
 
     /// Animation for the portal transition.
-    public let animation: Animation
+    public let animation: (Bool) -> Animation?
 
     /// Completion criteria for detecting when animation finishes.
     public let completionCriteria: AnimationCompletionCriteria
@@ -101,7 +101,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
         id: String,
         isActive: Binding<Bool>,
         in corners: PortalCorners? = nil,
-        animation: Animation,
+        animation: @escaping (Bool) -> Animation?,
         completionCriteria: AnimationCompletionCriteria,
         completion: @escaping (Bool) -> Void,
         @ViewBuilder layerView: @escaping () -> LayerView
@@ -115,11 +115,12 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
         self.layerView = layerView
 
         // Validate animation duration
-        Self.validateAnimationDuration(animation, id: id)
+        Self.validateAnimationDuration(animation(true) ?? animation(false), id: id)
     }
 
     /// Validates animation duration and logs a warning if it's too short for sheet transitions.
-    private static func validateAnimationDuration(_ animation: Animation, id: String) {
+    private static func validateAnimationDuration(_ animation: Animation?, id: String) {
+        guard let animation else { return }
         // Extract duration from animation if possible
         let mirror = Mirror(reflecting: animation)
 
@@ -173,7 +174,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
         completion: @escaping (Bool) -> Void
     ) {
         self.id = id
-        self.animation = config.animation.value
+        self.animation = { _ in config.animation.value }
         self.completionCriteria = config.animation.completionCriteria
         self.corners = config.corners
         self._isActive = isActive
@@ -225,7 +226,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
         if newValue {
             // Forward transition: isActive became true
             DispatchQueue.main.asyncAfter(deadline: .now() + PortalConstants.animationDelay) {
-                withAnimation(animation, completionCriteria: completionCriteria) {
+                withAnimation(animation(newValue), completionCriteria: completionCriteria) {
                     portalModel.info[idx].animateView = true
                 } completion: {
                     Task { @MainActor in
@@ -239,7 +240,7 @@ public struct ConditionalPortalTransitionModifier<LayerView: View>: ViewModifier
             // Reverse transition: isActive became false
             portalModel.info[idx].hideView = false
 
-            withAnimation(animation, completionCriteria: completionCriteria) {
+            withAnimation(animation(newValue), completionCriteria: completionCriteria) {
                 portalModel.info[idx].animateView = false
             } completion: {
                 Task { @MainActor in
@@ -333,7 +334,7 @@ public extension View {
                 id: id,
                 isActive: isActive,
                 in: corners,
-                animation: animation,
+                animation: { _ in animation },
                 completionCriteria: completionCriteria,
                 completion: completion,
                 layerView: layerView))
