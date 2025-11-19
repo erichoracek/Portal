@@ -31,14 +31,10 @@ import SwiftUI
 /// }
 /// ```
 public protocol AnimatedPortalLayer: View {
-    associatedtype Content: View
     associatedtype AnimatedContent: View
 
     /// The unique identifier for this portal layer.
     var portalID: String { get }
-
-    /// The content to be animated.
-    @ViewBuilder var content: () -> Content { get }
 
     /// Implement this method to define your custom animation logic.
     /// - Parameter isActive: Whether the portal transition is currently active.
